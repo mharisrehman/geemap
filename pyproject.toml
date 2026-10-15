@@ -1,0 +1,252 @@
+[build-system]
+requires = ["hatchling", "hatch-vcs"]
+build-backend = "hatchling.build"
+
+[project]
+name = "geemap"
+dynamic = ["version"]
+description = "A Python package for interactive mapping using Google Earth Engine and ipyleaflet"
+readme = "README.md"
+requires-python = ">=3.12"
+keywords = [
+    "geemap",
+]
+license = {text = "MIT"}
+authors = [
+  {name = "Qiusheng Wu", email = "giswqs@gmail.com"},
+]
+classifiers = [
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Natural Language :: English",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+]
+dependencies = [
+    "anywidget",
+    "bqplot",
+    "earthengine-api>=1.6.12",
+    "eerepr>=0.1.0",
+    "folium>=0.17.0",
+    "geocoder",
+    "ipyevents",
+    "ipyfilechooser>=0.6.0",
+    "ipyleaflet>=0.19.2",
+    "matplotlib",
+    "numpy",
+    "pandas",
+    "plotly",
+    "pyperclip",
+    "pyshp>=2.3.1",
+    "python-box",
+    "requests",
+    "scooby",
+    "xarray",
+    "xee>=0.1.0",
+]
+
+[project.scripts]
+geemap = "geemap.cli:main"
+
+[project.optional-dependencies]
+all = [
+    "geemap[ai,backends,dev,extra,lidar,raster,sql,apps,vector,workshop,maplibre]",
+]
+ai = [
+    "google-api-core",
+    "google-cloud-storage",
+    "google-generativeai",
+    "google_cloud_aiplatform",
+    "langchain-community",
+    "langchain_google_genai",
+    "langchain",
+    "iso8601"
+]
+backends = [
+    "keplergl",
+    "pydeck",
+]
+dev = [
+    "watchfiles",
+    "jupyterlab",
+    "beautifulsoup4>=4.12.0",
+    "pyrefly>=1.2.0",
+    "pytest>=9.1.1",
+]
+docs = [
+    "black",
+    "black[jupyter]",
+    "bump-my-version",
+    "codespell",
+    "coverage",
+    "deadlink",
+    "ipykernel",
+    "jupyter-client<8.11",
+    "livereload",
+    "mkdocs",
+    "mkdocs-git-revision-date-localized-plugin",
+    "mkdocs-git-revision-date-plugin",
+    "mkdocs-jupyter>=0.26.3",
+    "mkdocs-material>=9.7.7",
+    "mkdocs-pdf-export-plugin",
+    "mkdocstrings",
+    "mkdocstrings-crystal",
+    "mkdocstrings-python",
+    "nbconvert",
+    "nbformat",
+    "pip",
+    "pre-commit",
+    "pygments",
+    "pymdown-extensions",
+    "pyproject-flake8",
+    "sphinx",
+    "tox",
+    "twine",
+    "watchdog",
+    "wheel",
+]
+extra = [
+    "cartopy",
+    "ee_extra>=0.0.15",
+    "ffmpeg-python",
+    "gdown",
+    "geeadd>=0.5.1",
+    "geojson",
+    "geopandas",
+    "googledrivedownloader",
+    "ipynb-py-convert",
+    "ipytree",
+    "jupyterlab>=3",
+    "mapclassify>=2.4.0",
+    "mss",
+    "oeel",
+    "opencv-python",
+    "owslib",
+    "palettable",
+    "pycrs",
+    "rasterio",
+    "sankee>=0.1.0",
+    "whiteboxgui>=0.6.0",
+    "xee",
+]
+lidar = [
+    "ipygany",
+    "laspy[lazrs]",
+    "panel",
+    "pyntcloud[LAS]",
+    "pyvista",
+    "pyvista-xarray",
+    "rioxarray",
+]
+raster = [
+    "geedim",
+    "localtileserver>=0.10.1",
+    "rio-cogeo",
+    "rioxarray",
+    "netcdf4",
+    "pyvista-xarray",
+]
+sql = [
+    "psycopg2-binary",
+    "sqlalchemy",
+]
+tests = [
+    "beautifulsoup4",
+    "psutil",
+    "pyrefly>=1.2.0",
+    "pytest>=9.1.1",
+]
+apps = [
+    "gradio",
+    "streamlit-folium",
+    "voila",
+    "solara",
+]
+vector = [
+    "geopandas",
+    "osmnx",
+]
+workshop = [
+    "geopandas",
+    "geedim",
+    "ffmpeg-python",
+    "gdown",
+]
+maplibre = [
+    "geopandas",
+    "h3",
+    "ipyvuetify",
+    "localtileserver",
+    "mapclassify",
+    "maplibre",
+    "pmtiles",
+    "rioxarray",
+]
+
+[tool]
+[tool.hatch.build.targets.sdist]
+packages = ["geemap"]
+exclude = ["docs*"]
+
+[tool.distutils.bdist_wheel]
+universal = true
+
+[tool.hatch.version]
+source = "vcs"
+
+[tool.hatch.version.raw-options]
+local_scheme = "no-local-version"
+
+[tool.flake8]
+exclude = [
+    "docs",
+]
+max-line-length = 88
+
+[dependency-groups]
+dev = [
+    "beautifulsoup4>=4.12.0",
+    "pyrefly>=1.2.0",
+    "pytest>=9.1.1",
+]
+
+[tool.hatch.envs.default]
+features = ["dev"]
+
+[tool.hatch.build]
+only-packages = true
+artifacts = [
+    "geemap/static/*",
+    "geemap/data/**/*",
+]
+
+[tool.hatch.build.hooks.jupyter-builder]
+build-function = "hatch_jupyter_builder.npm_builder"
+optional-editable-build = true
+ensured-targets = [
+    "geemap/static/container.js",
+    "geemap/static/inspector.js",
+    "geemap/static/layer_editor.js",
+    "geemap/static/layer_manager_row.js",
+    "geemap/static/layer_manager.js",
+]
+skip-if-exists = [
+    "geemap/static/container.js",
+    "geemap/static/inspector.js",
+    "geemap/static/layer_editor.js",
+    "geemap/static/layer_manager_row.js",
+    "geemap/static/layer_manager.js",
+]
+dependencies = ["hatch-jupyter-builder>=0.5.0"]
+
+[tool.hatch.build.hooks.jupyter-builder.build-kwargs]
+npm = "npm"
+build_cmd = "build"
+
+[project.urls]
+Homepage = "https://github.com/gee-community/geemap"
+
+[tool.pyrefly]
+preset = "basic"
+project-includes = ["geemap", "tests"]
+ignore-missing-imports = ["*"]
